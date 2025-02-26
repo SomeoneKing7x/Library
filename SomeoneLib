@@ -55,7 +55,7 @@ local someonelib = {
 		Verde = {
     ["Color Hub 1"] = ColorSequence.new({
     -- Para substituir por uma imagem, use um ImageLabel com um AssetID
-    imagem.Image = "rbxassetid://127950462202673"
+ --   imagem.Image = "rbxassetid://127950462202673"
         ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)), -- Preto
         ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 64, 0)), -- Verde escuro
         ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0)) -- Preto
