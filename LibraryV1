@@ -70,6 +70,18 @@ local redzlib = {
 			["Color Text"] = Color3.fromRGB(240, 240, 240),
 			["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
 		},
+Pink = {
+			["Color Hub 1"] = ColorSequence.new({
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(50, 10, 30)),
+				ColorSequenceKeypoint.new(0.50, Color3.fromRGB(75, 20, 50)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(50, 10, 30))
+			}),
+			["Color Hub 2"] = Color3.fromRGB(40, 10, 30),
+			["Color Stroke"] = Color3.fromRGB(60, 20, 50),
+			["Color Theme"] = Color3.fromRGB(255, 20, 147),
+			["Color Text"] = Color3.fromRGB(240, 240, 240),
+			["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
+		},
 	},
 	Info = {
 		Version = "1.1.0"
@@ -77,7 +89,7 @@ local redzlib = {
 	Save = {
 		UISize = {650, 430},
 		TabSize = 160,
-		Theme = "Green"--Darker, Dark, Purple, Red, Green
+		Theme = "Pink"--Darker, Dark, Purple, Red, Green, Pink
 	},
 	Settings = {},
 	Connection = {},
