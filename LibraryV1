@@ -82,6 +82,18 @@ Pink = {
 			["Color Text"] = Color3.fromRGB(240, 240, 240),
 			["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
 		},
+Black = {
+    ["Color Hub 1"] = ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(25, 25, 25)),  -- Preto suave
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(40, 40, 40)),  -- Leve cinza escuro
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(25, 25, 25))   -- Preto suave
+    }),
+    ["Color Hub 2"] = Color3.fromRGB(30, 30, 30),  -- Cinza bem suave
+    ["Color Stroke"] = Color3.fromRGB(50, 50, 50),  -- Preto com mais cinza
+    ["Color Theme"] = Color3.fromRGB(255, 87, 34),  -- Laranja queimado
+    ["Color Text"] = Color3.fromRGB(243, 243, 243),  -- Texto claro
+    ["Color Dark Text"] = Color3.fromRGB(180, 180, 180)  -- Texto escuro, mais suave
+},
 	},
 	Info = {
 		Version = "1.1.0"
@@ -89,7 +101,7 @@ Pink = {
 	Save = {
 		UISize = {650, 430},
 		TabSize = 160,
-		Theme = "Red"--Darker, Dark, Purple, Red, Green, Pink
+		Theme = "Black"--Darker, Dark, Purple, Red, Green, Pink
 	},
 	Settings = {},
 	Connection = {},
