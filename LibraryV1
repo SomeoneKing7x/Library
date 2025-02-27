@@ -925,7 +925,7 @@ Pink = {
 }
 
 local ViewportSize = workspace.CurrentCamera.ViewportSize
-local UIScale = ViewportSize.Y / 350
+local UIScale = ViewportSize.Y / 400
 
 local Settings = redzlib.Settings
 local Flags = redzlib.Flags
@@ -1654,7 +1654,7 @@ function redzlib:MakeWindow(Configs)
 	function Window:AddMinimizeButton(Configs)
 		local Button = MakeDrag(Create("ImageButton", ScreenGui, {
 			Size = UDim2.fromOffset(50, 50),
-			Position = UDim2.fromScale(0.10, 0.15),
+			Position = UDim2.fromScale(0.20, 0.20),
 			BackgroundTransparency = 1,
 			BackgroundColor3 = Theme["Color Hub 2"],
 			AutoButtonColor = false
