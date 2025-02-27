@@ -111,7 +111,7 @@ Gold = {
 		Version = "1.1.0"
 	},
 	Save = {
-		UISize = {650, 430},
+		UISize = {600, 400},
 		TabSize = 160,
 		Theme = "Gold"--Darker, Dark, Purple, Red, Green, Pink, Black, Gold
 	},
