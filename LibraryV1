@@ -94,6 +94,18 @@ Black = {
     ["Color Text"] = Color3.fromRGB(243, 243, 243),  -- Texto claro
     ["Color Dark Text"] = Color3.fromRGB(180, 180, 180)  -- Texto escuro, mais suave
 },
+Gold = {
+    ["Color Hub 1"] = ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(50, 50, 50)),  -- Preto mais escuro
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(100, 100, 100)),  -- Cinza escuro
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(50, 50, 50))   -- Preto mais escuro
+    }),
+    ["Color Hub 2"] = Color3.fromRGB(60, 60, 60),  -- Tom suave de cinza
+    ["Color Stroke"] = Color3.fromRGB(150, 100, 50),  -- Toque dourado
+    ["Color Theme"] = Color3.fromRGB(255, 215, 0),  -- Dourado vibrante
+    ["Color Text"] = Color3.fromRGB(243, 243, 243),  -- Texto claro
+    ["Color Dark Text"] = Color3.fromRGB(180, 180, 180)  -- Texto escuro
+},
 	},
 	Info = {
 		Version = "1.1.0"
@@ -101,7 +113,7 @@ Black = {
 	Save = {
 		UISize = {650, 430},
 		TabSize = 160,
-		Theme = "Black"--Darker, Dark, Purple, Red, Green, Pink, Black
+		Theme = "Gold"--Darker, Dark, Purple, Red, Green, Pink, Black, Gold
 	},
 	Settings = {},
 	Connection = {},
