@@ -113,7 +113,7 @@ Gold = {
 	Save = {
 		UISize = {600, 400},
 		TabSize = 160,
-		Theme = "Gold"--Darker, Dark, Purple, Red, Green, Pink, Black, Gold
+		Theme = "Green"--Darker, Dark, Purple, Red, Green, Pink, Black, Gold
 	},
 	Settings = {},
 	Connection = {},
