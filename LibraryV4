@@ -1741,6 +1741,9 @@ function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor
     Frame.BorderSizePixel = 0  -- Remove bordas
     Frame.Parent = ScreenGui  -- Adiciona o frame ao ScreenGui
 
+    -- Adicionar bordas arredondadas
+    Frame.Radius = UDim.new(0, 15)  -- Define o raio para bordas arredondadas (ajuste o valor conforme necessário)
+
     -- Adicionar ícone, se fornecido
     if iconId then
         local Icon = Instance.new("ImageLabel")
