@@ -1711,22 +1711,32 @@ function redzlib:MakeWindow(Configs)
 			Title.Text = Val1
 		end
 	end
-function redzlib:AddNotify(text, duration, iconId)
-    duration = duration or 3
-    local themeColor = self.Themes[self.Save.Theme]["Color Theme"]
-    local backgroundColor = self.Themes[self.Save.Theme]["Color Hub 2"]
+function redzlib:AddNotify(options)
+    -- Usar valores padrão caso não sejam fornecidos
+    local text = options.text or "Notification"
+    local duration = options.duration or 3
+    local iconId = options.iconId
+    local size = options.size or UDim2.new(0, 320, 0, 50)
+    local backgroundColor = options.backgroundColor or self.Themes[self.Save.Theme]["Color Hub 2"]
+    local textColor = options.textColor or self.Themes[self.Save.Theme]["Color Theme"]
+    local position = options.position or UDim2.new(1, 20, 1, -60)  -- Posição padrão
+    local enterTime = options.enterTime or 0.5  -- Duração da animação de entrada
+    local exitTime = options.exitTime or 0.5   -- Duração da animação de saída
 
+    -- Criar o ScreenGui
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Parent = CoreGui
 
+    -- Criar o Frame da notificação
     local Frame = Instance.new("Frame")
-    Frame.Size = UDim2.new(0, 320, 0, 50)
-    Frame.Position = UDim2.new(1, 20, 0.1, 0) -- Começa fora da tela no canto direito
-    Frame.AnchorPoint = Vector2.new(1, 0)
+    Frame.Size = size
+    Frame.Position = position
+    Frame.AnchorPoint = Vector2.new(1, 1)
     Frame.BackgroundColor3 = backgroundColor
     Frame.BorderSizePixel = 0
     Frame.Parent = ScreenGui
 
+    -- Adicionar ícone, se fornecido
     if iconId then
         local Icon = Instance.new("ImageLabel")
         Icon.Size = UDim2.new(0, 24, 0, 24)
@@ -1736,24 +1746,30 @@ function redzlib:AddNotify(text, duration, iconId)
         Icon.Parent = Frame
     end
 
+    -- Adicionar o texto da notificação
     local TextLabel = Instance.new("TextLabel")
     TextLabel.Size = UDim2.new(1, iconId and -40 or -10, 1, -10)
-    TextLabel.Position = UDim2.new(iconId and 0, 40 or 0, 0, 5)
+    TextLabel.Position = UDim2.new(iconId and 0 or 0, iconId and 40 or 0, 0, 5)
     TextLabel.BackgroundTransparency = 1
     TextLabel.Text = text
-    TextLabel.TextColor3 = themeColor
+    TextLabel.TextColor3 = textColor
     TextLabel.TextSize = 20
     TextLabel.Font = Enum.Font.SourceSans
     TextLabel.TextXAlignment = Enum.TextXAlignment.Left
     TextLabel.Parent = Frame
 
-    local Tween = TweenService:Create(Frame, TweenInfo.new(0.5), {Position = UDim2.new(1, -20, 0.1, 0)})
-    Tween:Play()
+    -- Animação de entrada
+    local TweenIn = TweenService:Create(Frame, TweenInfo.new(enterTime), {Position = UDim2.new(1, -20, 1, -60)})
+    TweenIn:Play()
 
+    -- Espera a duração da notificação
     task.wait(duration)
 
-    local TweenOut = TweenService:Create(Frame, TweenInfo.new(0.5), {Position = UDim2.new(1, 20, 0.1, 0)})
+    -- Animação de saída
+    local TweenOut = TweenService:Create(Frame, TweenInfo.new(exitTime), {Position = UDim2.new(1, 20, 1, -60)})
     TweenOut:Play()
+
+    -- Quando a animação de saída for concluída, destruir o ScreenGui
     TweenOut.Completed:Connect(function()
         ScreenGui:Destroy()
     end)
