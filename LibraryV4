@@ -1711,29 +1711,29 @@ function redzlib:MakeWindow(Configs)
 			Title.Text = Val1
 		end
 	end
-function redzlib:AddNotify(options)
+function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor, textColor, enterTime, exitTime, positionX, positionY)
     -- Usar valores padrão caso não sejam fornecidos
-    local text = options.text or "Notification"
-    local duration = options.duration or 3
-    local iconId = options.iconId
-    local sizeX = options.sizeX or 320 -- Largura
-    local sizeY = options.sizeY or 50   -- Altura
-    local backgroundColor = options.backgroundColor or Color3.fromRGB(0, 0, 0) -- Cor de fundo padrão
-    local textColor = options.textColor or Color3.fromRGB(255, 255, 255)  -- Cor do texto
-    local positionX = options.positionX or 1
-    local positionY = options.positionY or 1
-    local enterTime = options.enterTime or 0.5  -- Duração da animação de entrada
-    local exitTime = options.exitTime or 0.5   -- Duração da animação de saída
+    text = text or "Notification"
+    duration = duration or 3
+    iconId = iconId or nil
+    sizeX = sizeX or 320
+    sizeY = sizeY or 50
+    backgroundColor = backgroundColor or Color3.fromRGB(0, 0, 0)
+    textColor = textColor or Color3.fromRGB(255, 255, 255)
+    enterTime = enterTime or 0.5
+    exitTime = exitTime or 0.5
+    positionX = positionX or 1  -- Default for the right
+    positionY = positionY or 1  -- Default for the bottom
 
     -- Criar o ScreenGui
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Parent = CoreGui
+    ScreenGui.Parent = game.CoreGui
 
     -- Criar o Frame da notificação
     local Frame = Instance.new("Frame")
     Frame.Size = UDim2.new(0, sizeX, 0, sizeY)
-    Frame.Position = UDim2.new(positionX, 20, positionY, -60)
-    Frame.AnchorPoint = Vector2.new(1, 1)
+    Frame.Position = UDim2.new(positionX, -20, positionY, -60)  -- Posição personalizada
+    Frame.AnchorPoint = Vector2.new(1, 1)  -- Ajusta o ponto de ancoragem para o canto
     Frame.BackgroundColor3 = backgroundColor
     Frame.BorderSizePixel = 0
     Frame.Parent = ScreenGui
@@ -1760,18 +1760,16 @@ function redzlib:AddNotify(options)
     TextLabel.TextXAlignment = Enum.TextXAlignment.Left
     TextLabel.Parent = Frame
 
-    -- Animação de entrada
-    local TweenIn = TweenService:Create(Frame, TweenInfo.new(enterTime), {Position = UDim2.new(1, -20, 1, -60)})
-    TweenIn:Play()
+    -- Criar animação de entrada
+    local Tween = TweenService:Create(Frame, TweenInfo.new(enterTime), {Position = UDim2.new(positionX, -20, positionY, -60)})
+    Tween:Play()
 
-    -- Espera a duração da notificação
+    -- Aguarda a duração da notificação
     task.wait(duration)
 
-    -- Animação de saída
-    local TweenOut = TweenService:Create(Frame, TweenInfo.new(exitTime), {Position = UDim2.new(1, 20, 1, -60)})
+    -- Criar animação de saída
+    local TweenOut = TweenService:Create(Frame, TweenInfo.new(exitTime), {Position = UDim2.new(positionX, -20, positionY, -60)})
     TweenOut:Play()
-
-    -- Quando a animação de saída for concluída, destruir o ScreenGui
     TweenOut.Completed:Connect(function()
         ScreenGui:Destroy()
     end)
