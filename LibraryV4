@@ -1711,9 +1711,9 @@ function redzlib:MakeWindow(Configs)
 			Title.Text = Val1
 		end
 	end
-local TweenService = game:GetService("TweenService") -- Obtém o serviço responsável por animações suaves
+local TweenService = game:GetService("TweenService")  -- Obtém o serviço responsável por animações suaves
 
-function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor, textColor, enterTime, exitTime, positionX, positionY, showCloseButton)
+function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor, textColor, enterTime, exitTime, positionX, positionY, showCloseButton, direction)
     -- Usar valores padrão caso não sejam fornecidos
     text = text or "Notification"  -- Texto da notificação
     duration = duration or 3  -- Tempo que a notificação fica visível antes de desaparecer
@@ -1727,6 +1727,7 @@ function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor
     positionX = positionX or 1  -- Define a posição horizontal (1 = canto direito)
     positionY = positionY or 1  -- Define a posição vertical (1 = parte inferior)
     showCloseButton = showCloseButton or false  -- Define se a notificação terá um botão "X" para fechar
+    direction = direction or "DireitaToEsquerda"  -- Direção da animação (valor padrão: "DireitaToEsquerda")
 
     -- Criar o ScreenGui (interface gráfica para exibir a notificação)
     local ScreenGui = Instance.new("ScreenGui")
@@ -1735,7 +1736,6 @@ function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor
     -- Criar o Frame da notificação (caixa de fundo)
     local Frame = Instance.new("Frame")
     Frame.Size = UDim2.new(0, sizeX, 0, sizeY)  -- Define o tamanho do frame
-    Frame.Position = UDim2.new(positionX, 20, positionY, -sizeY - 20)  -- Inicialmente fora da tela
     Frame.AnchorPoint = Vector2.new(1, 1)  -- Define o ponto de ancoragem no canto inferior direito
     Frame.BackgroundColor3 = backgroundColor  -- Define a cor de fundo
     Frame.BorderSizePixel = 0  -- Remove bordas
@@ -1743,7 +1743,7 @@ function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor
 
     -- Adicionar bordas arredondadas (usando a propriedade CornerRadius)
     local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 15)  -- Define o raio para bordas arredondadas (ajuste conforme necessário)
+    Corner.CornerRadius = UDim.new(0, 15)  -- Define o raio para bordas arredondadas
     Corner.Parent = Frame  -- Adiciona a configuração de borda arredondada ao Frame
 
     -- Adicionar ícone, se fornecido
@@ -1751,58 +1751,81 @@ function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor
         local Icon = Instance.new("ImageLabel")
         Icon.Size = UDim2.new(0, 24, 0, 24)  -- Define o tamanho do ícone
         Icon.Position = UDim2.new(0, 10, 0.5, -12)  -- Posição ajustada no frame
-        Icon.BackgroundTransparency = 1  -- Torna o fundo do ícone invisível
-        Icon.Image = "rbxassetid://" .. tostring(iconId)  -- Define a imagem do ícone
-        Icon.Parent = Frame  -- Adiciona o ícone ao frame
+        Icon.BackgroundTransparency = 1
+        Icon.Image = "rbxassetid://" .. tostring(iconId)
+        Icon.Parent = Frame
     end
 
     -- Adicionar o texto da notificação
     local TextLabel = Instance.new("TextLabel")
-    TextLabel.Size = UDim2.new(1, iconId and -60 or -40, 1, -10)  -- Define o tamanho ajustado para incluir ícone, se existir
-    TextLabel.Position = UDim2.new(iconId and 0 or 0, iconId and 40 or 10, 0, 5)  -- Posição ajustada dependendo do ícone
-    TextLabel.BackgroundTransparency = 1  -- Remove o fundo do texto
-    TextLabel.Text = text  -- Define o conteúdo do texto
-    TextLabel.TextColor3 = textColor  -- Define a cor do texto
-    TextLabel.TextSize = 18  -- Define o tamanho da fonte
-    TextLabel.Font = Enum.Font.FredokaOne  -- Define a fonte como FredokaOne
-    TextLabel.TextXAlignment = Enum.TextXAlignment.Left  -- Alinha o texto à esquerda
-    TextLabel.Parent = Frame  -- Adiciona o texto ao frame
+    TextLabel.Size = UDim2.new(1, iconId and -40 or -10, 1, -10)
+    TextLabel.Position = UDim2.new(iconId and 0 or 0, iconId and 40 or 0, 0, 5)
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Text = text
+    TextLabel.TextColor3 = textColor
+    TextLabel.TextSize = 20
+    TextLabel.Font = Enum.Font.FredokaOne
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.Parent = Frame
 
-    -- Criar botão de fechar ("X") se showCloseButton for verdadeiro
-    local CloseButton
+    -- Adicionar o botão de fechar (X) se showCloseButton for verdadeiro
     if showCloseButton then
-        CloseButton = Instance.new("TextButton")
-        CloseButton.Size = UDim2.new(0, 20, 0, 20)  -- Define o tamanho do botão
-        CloseButton.Position = UDim2.new(1, -25, 0, 5)  -- Posiciona no canto superior direito do frame
-        CloseButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)  -- Define a cor vermelha do botão
-        CloseButton.Text = "X"  -- Define o texto do botão como "X"
-        CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Cor do texto branca
-        CloseButton.TextSize = 14  -- Define o tamanho do texto do botão
-        CloseButton.Font = Enum.Font.SourceSansBold  -- Define a fonte em negrito
-        CloseButton.Parent = Frame  -- Adiciona o botão ao frame
-    end
-
-    -- Criar animação de entrada (trazendo a notificação para a tela)
-    local TweenIn = TweenService:Create(Frame, TweenInfo.new(enterTime), {Position = UDim2.new(positionX, -20, positionY, -sizeY - 20)})
-    TweenIn:Play()  -- Executa a animação de entrada
-
-    -- Função para fechar a notificação
-    local function closeNotification()
-        -- Criar animação de saída (removendo a notificação da tela)
-        local TweenOut = TweenService:Create(Frame, TweenInfo.new(exitTime), {Position = UDim2.new(positionX, 20, positionY, -sizeY - 20)})
-        TweenOut:Play()  -- Executa a animação de saída
-        TweenOut.Completed:Connect(function()
-            ScreenGui:Destroy()  -- Remove completamente a notificação quando a animação terminar
+        local CloseButton = Instance.new("TextButton")
+        CloseButton.Size = UDim2.new(0, 24, 0, 24)
+        CloseButton.Position = UDim2.new(1, -30, 0, 5)
+        CloseButton.BackgroundTransparency = 1
+        CloseButton.Text = "X"
+        CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        CloseButton.TextSize = 18
+        CloseButton.Font = Enum.Font.SourceSans
+        CloseButton.Parent = Frame
+        CloseButton.MouseButton1Click:Connect(function()
+            Frame:TweenOut(0.5)
         end)
     end
 
-    -- Se o botão "X" existir, conectar evento de clique para fechar a notificação
-    if showCloseButton and CloseButton then
-        CloseButton.MouseButton1Click:Connect(closeNotification)
+    -- Função para calcular a direção de entrada com base no parâmetro direction
+    local function calculatePosition(direction)
+        local startPos = UDim2.new(positionX, 20, positionY, -sizeY - 20)
+        
+        -- Configuração das direções
+        if direction == "DireitaToEsquerda" then
+            return UDim2.new(positionX, 20, positionY, -sizeY - 20), UDim2.new(positionX, -sizeX - 20, positionY, -sizeY - 20)
+        elseif direction == "EsquerdaToDireita" then
+            return UDim2.new(positionX, -sizeX - 20, positionY, -sizeY - 20), UDim2.new(positionX, 20, positionY, -sizeY - 20)
+        elseif direction == "CimaToBaixo" then
+            return UDim2.new(positionX, -sizeX - 20, positionY, -sizeY - 20), UDim2.new(positionX, 20, positionY, 20)
+        elseif direction == "BaixoToCima" then
+            return UDim2.new(positionX, 20, positionY, 20), UDim2.new(positionX, -sizeX - 20, positionY, -sizeY - 20)
+        elseif direction == "DiagonalParaCimaEsquerda" then
+            return UDim2.new(positionX, 20, positionY, -sizeY - 20), UDim2.new(positionX, -sizeX - 20, positionY, -sizeY - 20)
+        elseif direction == "DiagonalParaCimaDireita" then
+            return UDim2.new(positionX, 20, positionY, -sizeY - 20), UDim2.new(positionX, sizeX + 20, positionY, -sizeY - 20)
+        elseif direction == "DiagonalParaBaixoEsquerda" then
+            return UDim2.new(positionX, -sizeX - 20, positionY, 20), UDim2.new(positionX, -sizeX - 20, positionY, sizeY + 20)
+        elseif direction == "DiagonalParaBaixoDireita" then
+            return UDim2.new(positionX, sizeX + 20, positionY, 20), UDim2.new(positionX, sizeX + 20, positionY, sizeY + 20)
+        else
+            return UDim2.new(positionX, 20, positionY, -sizeY - 20), UDim2.new(positionX, -sizeX - 20, positionY, -sizeY - 20)
+        end
     end
 
-    -- Fechar automaticamente após a duração definida
-    task.delay(duration, closeNotification)
+    -- Obtém a posição inicial e final com base na direção
+    local startPosition, endPosition = calculatePosition(direction)
+
+    -- Criar animação de entrada
+    local Tween = TweenService:Create(Frame, TweenInfo.new(enterTime), {Position = endPosition})
+    Tween:Play()
+
+    -- Aguarda a duração da notificação
+    task.wait(duration)
+
+    -- Criar animação de saída
+    local TweenOut = TweenService:Create(Frame, TweenInfo.new(exitTime), {Position = startPosition})
+    TweenOut:Play()
+    TweenOut.Completed:Connect(function()
+        ScreenGui:Destroy()  -- Remove o ScreenGui após a animação de saída
+    end)
 end
 	function Window:Dialog(Configs)
 		if MainFrame:FindFirstChild("Dialog") then return end
