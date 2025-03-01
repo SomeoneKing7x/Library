@@ -1711,68 +1711,93 @@ function redzlib:MakeWindow(Configs)
 			Title.Text = Val1
 		end
 	end
-function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor, textColor, enterTime, exitTime, positionX, positionY)
+local TweenService = game:GetService("TweenService") -- Obtém o serviço responsável por animações suaves
+
+function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor, textColor, enterTime, exitTime, positionX, positionY, showCloseButton)
     -- Usar valores padrão caso não sejam fornecidos
-    text = text or "Notification"
-    duration = duration or 3
-    iconId = iconId or nil
-    sizeX = sizeX or 320
-    sizeY = sizeY or 50
-    backgroundColor = backgroundColor or Color3.fromRGB(0, 0, 0)
-    textColor = textColor or Color3.fromRGB(255, 255, 255)
-    enterTime = enterTime or 0.5
-    exitTime = exitTime or 0.5
-    positionX = positionX or 1  -- Default for the right
-    positionY = positionY or 1  -- Default for the bottom
+    text = text or "Notification"  -- Texto da notificação
+    duration = duration or 3  -- Tempo que a notificação fica visível antes de desaparecer
+    iconId = iconId or nil  -- ID do ícone da notificação (opcional)
+    sizeX = sizeX or 320  -- Largura da notificação
+    sizeY = sizeY or 50  -- Altura da notificação
+    backgroundColor = backgroundColor or Color3.fromRGB(0, 0, 0)  -- Cor de fundo da notificação
+    textColor = textColor or Color3.fromRGB(255, 255, 255)  -- Cor do texto
+    enterTime = enterTime or 0.5  -- Tempo da animação de entrada
+    exitTime = exitTime or 0.5  -- Tempo da animação de saída
+    positionX = positionX or 1  -- Define a posição horizontal (1 = canto direito)
+    positionY = positionY or 1  -- Define a posição vertical (1 = parte inferior)
+    showCloseButton = showCloseButton or false  -- Define se a notificação terá um botão "X" para fechar
 
-    -- Criar o ScreenGui
+    -- Criar o ScreenGui (interface gráfica para exibir a notificação)
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Parent = game.CoreGui
+    ScreenGui.Parent = game.CoreGui  -- Adiciona o ScreenGui à interface do jogo
 
-    -- Criar o Frame da notificação
+    -- Criar o Frame da notificação (caixa de fundo)
     local Frame = Instance.new("Frame")
-    Frame.Size = UDim2.new(0, sizeX, 0, sizeY)
-    Frame.Position = UDim2.new(positionX, -20, positionY, -60)  -- Posição personalizada
-    Frame.AnchorPoint = Vector2.new(1, 1)  -- Ajusta o ponto de ancoragem para o canto
-    Frame.BackgroundColor3 = backgroundColor
-    Frame.BorderSizePixel = 0
-    Frame.Parent = ScreenGui
+    Frame.Size = UDim2.new(0, sizeX, 0, sizeY)  -- Define o tamanho do frame
+    Frame.Position = UDim2.new(positionX, 20, positionY, -sizeY - 20)  -- Inicialmente fora da tela
+    Frame.AnchorPoint = Vector2.new(1, 1)  -- Define o ponto de ancoragem no canto inferior direito
+    Frame.BackgroundColor3 = backgroundColor  -- Define a cor de fundo
+    Frame.BorderSizePixel = 0  -- Remove bordas
+    Frame.Parent = ScreenGui  -- Adiciona o frame ao ScreenGui
 
     -- Adicionar ícone, se fornecido
     if iconId then
         local Icon = Instance.new("ImageLabel")
-        Icon.Size = UDim2.new(0, 24, 0, 24)
-        Icon.Position = UDim2.new(0, 10, 0.5, -12)
-        Icon.BackgroundTransparency = 1
-        Icon.Image = "rbxassetid://" .. tostring(iconId)
-        Icon.Parent = Frame
+        Icon.Size = UDim2.new(0, 24, 0, 24)  -- Define o tamanho do ícone
+        Icon.Position = UDim2.new(0, 10, 0.5, -12)  -- Posição ajustada no frame
+        Icon.BackgroundTransparency = 1  -- Torna o fundo do ícone invisível
+        Icon.Image = "rbxassetid://" .. tostring(iconId)  -- Define a imagem do ícone
+        Icon.Parent = Frame  -- Adiciona o ícone ao frame
     end
 
     -- Adicionar o texto da notificação
     local TextLabel = Instance.new("TextLabel")
-    TextLabel.Size = UDim2.new(1, iconId and -40 or -10, 1, -10)
-    TextLabel.Position = UDim2.new(iconId and 0 or 0, iconId and 40 or 0, 0, 5)
-    TextLabel.BackgroundTransparency = 1
-    TextLabel.Text = text
-    TextLabel.TextColor3 = textColor
-    TextLabel.TextSize = 20
-    TextLabel.Font = Enum.Font.SourceSans
-    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-    TextLabel.Parent = Frame
+    TextLabel.Size = UDim2.new(1, iconId and -60 or -40, 1, -10)  -- Define o tamanho ajustado para incluir ícone, se existir
+    TextLabel.Position = UDim2.new(iconId and 0 or 0, iconId and 40 or 10, 0, 5)  -- Posição ajustada dependendo do ícone
+    TextLabel.BackgroundTransparency = 1  -- Remove o fundo do texto
+    TextLabel.Text = text  -- Define o conteúdo do texto
+    TextLabel.TextColor3 = textColor  -- Define a cor do texto
+    TextLabel.TextSize = 18  -- Define o tamanho da fonte
+    TextLabel.Font = Enum.Font.FredokaOne  -- Define a fonte como FredokaOne
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left  -- Alinha o texto à esquerda
+    TextLabel.Parent = Frame  -- Adiciona o texto ao frame
 
-    -- Criar animação de entrada
-    local Tween = TweenService:Create(Frame, TweenInfo.new(enterTime), {Position = UDim2.new(positionX, -20, positionY, -60)})
-    Tween:Play()
+    -- Criar botão de fechar ("X") se showCloseButton for verdadeiro
+    local CloseButton
+    if showCloseButton then
+        CloseButton = Instance.new("TextButton")
+        CloseButton.Size = UDim2.new(0, 20, 0, 20)  -- Define o tamanho do botão
+        CloseButton.Position = UDim2.new(1, -25, 0, 5)  -- Posiciona no canto superior direito do frame
+        CloseButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)  -- Define a cor vermelha do botão
+        CloseButton.Text = "X"  -- Define o texto do botão como "X"
+        CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Cor do texto branca
+        CloseButton.TextSize = 14  -- Define o tamanho do texto do botão
+        CloseButton.Font = Enum.Font.SourceSansBold  -- Define a fonte em negrito
+        CloseButton.Parent = Frame  -- Adiciona o botão ao frame
+    end
 
-    -- Aguarda a duração da notificação
-    task.wait(duration)
+    -- Criar animação de entrada (trazendo a notificação para a tela)
+    local TweenIn = TweenService:Create(Frame, TweenInfo.new(enterTime), {Position = UDim2.new(positionX, -20, positionY, -sizeY - 20)})
+    TweenIn:Play()  -- Executa a animação de entrada
 
-    -- Criar animação de saída
-    local TweenOut = TweenService:Create(Frame, TweenInfo.new(exitTime), {Position = UDim2.new(positionX, -20, positionY, -60)})
-    TweenOut:Play()
-    TweenOut.Completed:Connect(function()
-        ScreenGui:Destroy()
-    end)
+    -- Função para fechar a notificação
+    local function closeNotification()
+        -- Criar animação de saída (removendo a notificação da tela)
+        local TweenOut = TweenService:Create(Frame, TweenInfo.new(exitTime), {Position = UDim2.new(positionX, 20, positionY, -sizeY - 20)})
+        TweenOut:Play()  -- Executa a animação de saída
+        TweenOut.Completed:Connect(function()
+            ScreenGui:Destroy()  -- Remove completamente a notificação quando a animação terminar
+        end)
+    end
+
+    -- Se o botão "X" existir, conectar evento de clique para fechar a notificação
+    if showCloseButton and CloseButton then
+        CloseButton.MouseButton1Click:Connect(closeNotification)
+    end
+
+    -- Fechar automaticamente após a duração definida
+    task.delay(duration, closeNotification)
 end
 	function Window:Dialog(Configs)
 		if MainFrame:FindFirstChild("Dialog") then return end
