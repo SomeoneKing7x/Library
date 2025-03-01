@@ -113,7 +113,7 @@ Gold = {
 	Save = {
 		UISize = {600, 400},
 		TabSize = 160,
-		Theme = "Green"--Darker, Dark, Purple, Red, Green, Pink, Black, Gold
+		Theme = "Darker"--Darker, Dark, Purple, Red, Green, Pink, Black, Gold
 	},
 	Settings = {},
 	Connection = {},
@@ -2659,6 +2659,53 @@ function redzlib:MakeWindow(Configs)
 			function TextBox:Destroy() Button:Destroy() end
 			return TextBox
 		end
+function redzlib:AddNotify(text, duration, iconId)
+    duration = duration or 3
+    local themeColor = self.Themes[self.Save.Theme]["Color Theme"] -- Cor do tema
+    local backgroundColor = self.Themes[self.Save.Theme]["Color Hub 2"] -- Cor de fundo
+
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Parent = CoreGui
+
+    local Frame = Instance.new("Frame")
+    Frame.Size = UDim2.new(0, 320, 0, 50)
+    Frame.Position = UDim2.new(0.5, -160, 0, -60) -- Inicialmente fora da tela
+    Frame.BackgroundColor3 = backgroundColor
+    Frame.BorderSizePixel = 0
+    Frame.Parent = ScreenGui
+
+    -- Ícone da notificação (opcional)
+    if iconId then
+        local Icon = Instance.new("ImageLabel")
+        Icon.Size = UDim2.new(0, 24, 0, 24)
+        Icon.Position = UDim2.new(0, 10, 0.5, -12)
+        Icon.BackgroundTransparency = 1
+        Icon.Image = "rbxassetid://" .. tostring(iconId)
+        Icon.Parent = Frame
+    end
+
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Size = UDim2.new(1, iconId and -40 or -10, 1, -10)
+    TextLabel.Position = UDim2.new(iconId and 0, 40 or 0, 0, 5)
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Text = text
+    TextLabel.TextColor3 = themeColor
+    TextLabel.TextSize = 20
+    TextLabel.Font = Enum.Font.SourceSans
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.Parent = Frame
+
+    local Tween = TweenService:Create(Frame, TweenInfo.new(0.5), {Position = UDim2.new(0.5, -160, 0.1, 0)})
+    Tween:Play()
+
+    task.wait(duration)
+
+    local TweenOut = TweenService:Create(Frame, TweenInfo.new(0.5), {Position = UDim2.new(0.5, -160, 0, -60)})
+    TweenOut:Play()
+    TweenOut.Completed:Connect(function()
+        ScreenGui:Destroy()
+    end)
+end
 		function Tab:AddDiscordInvite(Configs)
 			local Title = Configs[1] or Configs.Name or Configs.Title or "Discord"
 			local Desc = Configs.Desc or Configs.Description or ""
