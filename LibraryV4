@@ -1716,10 +1716,12 @@ function redzlib:AddNotify(options)
     local text = options.text or "Notification"
     local duration = options.duration or 3
     local iconId = options.iconId
-    local size = options.size or UDim2.new(0, 320, 0, 50)
-    local backgroundColor = options.backgroundColor or self.Themes[self.Save.Theme]["Color Hub 2"]
-    local textColor = options.textColor or self.Themes[self.Save.Theme]["Color Theme"]
-    local position = options.position or UDim2.new(1, 20, 1, -60)  -- Posição padrão
+    local sizeX = options.sizeX or 320 -- Largura
+    local sizeY = options.sizeY or 50   -- Altura
+    local backgroundColor = options.backgroundColor or Color3.fromRGB(0, 0, 0) -- Cor de fundo padrão
+    local textColor = options.textColor or Color3.fromRGB(255, 255, 255)  -- Cor do texto
+    local positionX = options.positionX or 1
+    local positionY = options.positionY or 1
     local enterTime = options.enterTime or 0.5  -- Duração da animação de entrada
     local exitTime = options.exitTime or 0.5   -- Duração da animação de saída
 
@@ -1729,8 +1731,8 @@ function redzlib:AddNotify(options)
 
     -- Criar o Frame da notificação
     local Frame = Instance.new("Frame")
-    Frame.Size = size
-    Frame.Position = position
+    Frame.Size = UDim2.new(0, sizeX, 0, sizeY)
+    Frame.Position = UDim2.new(positionX, 20, positionY, -60)
     Frame.AnchorPoint = Vector2.new(1, 1)
     Frame.BackgroundColor3 = backgroundColor
     Frame.BorderSizePixel = 0
