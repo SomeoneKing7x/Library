@@ -84,15 +84,15 @@ Pink = {
 		},
 Black = {
     ["Color Hub 1"] = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(25, 25, 25)),  -- Preto suave
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(40, 40, 40)),  -- Leve cinza escuro
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(25, 25, 25))   -- Preto suave
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(10, 10, 10)),  -- Preto muito suave
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(30, 30, 30)),  -- Cinza escuro
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(10, 10, 10))   -- Preto muito suave
     }),
-    ["Color Hub 2"] = Color3.fromRGB(30, 30, 30),  -- Cinza bem suave
-    ["Color Stroke"] = Color3.fromRGB(50, 50, 50),  -- Preto com mais cinza
-    ["Color Theme"] = Color3.fromRGB(255, 87, 34),  -- Laranja queimado
-    ["Color Text"] = Color3.fromRGB(243, 243, 243),  -- Texto claro
-    ["Color Dark Text"] = Color3.fromRGB(180, 180, 180)  -- Texto escuro, mais suave
+    ["Color Hub 2"] = Color3.fromRGB(20, 20, 20),  -- Cinza muito suave
+    ["Color Stroke"] = Color3.fromRGB(40, 40, 40),  -- Cinza escuro com mais preto
+    ["Color Theme"] = Color3.fromRGB(50, 50, 50),  -- Cinza bem escuro
+    ["Color Text"] = Color3.fromRGB(200, 200, 200),  -- Texto claro, mais suave
+    ["Color Dark Text"] = Color3.fromRGB(120, 120, 120)  -- Texto escuro, mais suave
 },
 Gold = {
     ["Color Hub 1"] = ColorSequence.new({
@@ -113,7 +113,7 @@ Gold = {
 	Save = {
 		UISize = {580, 400},
 		TabSize = 160,
-		Theme = "Red"--Darker, Dark, Purple, Red, Green, Pink, Black, Gold
+		Theme = "Black"--Darker, Dark, Purple, Red, Green, Pink, Black, Gold
 	},
 	Settings = {},
 	Connection = {},
@@ -1780,7 +1780,12 @@ function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor
         CloseButton.Font = Enum.Font.SourceSans
         CloseButton.Parent = Frame
         CloseButton.MouseButton1Click:Connect(function()
-            Frame:TweenOut(0.5)
+            -- Animação de saída ao clicar no botão "X"
+            local TweenOut = TweenService:Create(Frame, TweenInfo.new(exitTime), {Position = UDim2.new(positionX, -sizeX - 20, positionY, -sizeY - 20)})
+            TweenOut:Play()
+            TweenOut.Completed:Connect(function()
+                ScreenGui:Destroy()  -- Remove o ScreenGui após a animação de saída
+            end)
         end)
     end
 
