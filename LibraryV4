@@ -1711,36 +1711,22 @@ function redzlib:MakeWindow(Configs)
 			Title.Text = Val1
 		end
 	end
-local TweenService = game:GetService("TweenService")
-
-function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor, textColor, enterTime, exitTime, positionX, positionY)
-    -- Usar valores padrão caso não sejam fornecidos
-    text = text or "Notification"
+function redzlib:AddNotify(text, duration, iconId)
     duration = duration or 3
-    iconId = iconId or nil
-    sizeX = sizeX or 320
-    sizeY = sizeY or 50
-    backgroundColor = backgroundColor or Color3.fromRGB(0, 0, 0)
-    textColor = textColor or Color3.fromRGB(255, 255, 255)
-    enterTime = enterTime or 0.5
-    exitTime = exitTime or 0.5
-    positionX = positionX or 1  -- Default for the right
-    positionY = positionY or 1  -- Default for the bottom
+    local themeColor = self.Themes[self.Save.Theme]["Color Theme"]
+    local backgroundColor = self.Themes[self.Save.Theme]["Color Hub 2"]
 
-    -- Criar o ScreenGui
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Parent = game.CoreGui
+    ScreenGui.Parent = CoreGui
 
-    -- Criar o Frame da notificação
     local Frame = Instance.new("Frame")
-    Frame.Size = UDim2.new(0, sizeX, 0, sizeY)
-    Frame.Position = UDim2.new(positionX, -20, positionY, -60)  -- Posição personalizada
-    Frame.AnchorPoint = Vector2.new(1, 1)  -- Ajusta o ponto de ancoragem para o canto
+    Frame.Size = UDim2.new(0, 320, 0, 50)
+    Frame.Position = UDim2.new(1, 20, 0.1, 0) -- Começa fora da tela no canto direito
+    Frame.AnchorPoint = Vector2.new(1, 0)
     Frame.BackgroundColor3 = backgroundColor
     Frame.BorderSizePixel = 0
     Frame.Parent = ScreenGui
 
-    -- Adicionar ícone, se fornecido
     if iconId then
         local Icon = Instance.new("ImageLabel")
         Icon.Size = UDim2.new(0, 24, 0, 24)
@@ -1750,27 +1736,23 @@ function redzlib:AddNotify(text, duration, iconId, sizeX, sizeY, backgroundColor
         Icon.Parent = Frame
     end
 
-    -- Adicionar o texto da notificação
     local TextLabel = Instance.new("TextLabel")
     TextLabel.Size = UDim2.new(1, iconId and -40 or -10, 1, -10)
-    TextLabel.Position = UDim2.new(iconId and 0 or 0, iconId and 40 or 0, 0, 5)
+    TextLabel.Position = UDim2.new(iconId and 0, 40 or 0, 0, 5)
     TextLabel.BackgroundTransparency = 1
     TextLabel.Text = text
-    TextLabel.TextColor3 = textColor
+    TextLabel.TextColor3 = themeColor
     TextLabel.TextSize = 20
     TextLabel.Font = Enum.Font.SourceSans
     TextLabel.TextXAlignment = Enum.TextXAlignment.Left
     TextLabel.Parent = Frame
 
-    -- Criar animação de entrada
-    local Tween = TweenService:Create(Frame, TweenInfo.new(enterTime), {Position = UDim2.new(positionX, -20, positionY, -60)})
+    local Tween = TweenService:Create(Frame, TweenInfo.new(0.5), {Position = UDim2.new(1, -20, 0.1, 0)})
     Tween:Play()
 
-    -- Aguarda a duração da notificação
     task.wait(duration)
 
-    -- Criar animação de saída
-    local TweenOut = TweenService:Create(Frame, TweenInfo.new(exitTime), {Position = UDim2.new(positionX, -20, positionY, -60)})
+    local TweenOut = TweenService:Create(Frame, TweenInfo.new(0.5), {Position = UDim2.new(1, 20, 0.1, 0)})
     TweenOut:Play()
     TweenOut.Completed:Connect(function()
         ScreenGui:Destroy()
