@@ -1718,78 +1718,60 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local playerGui = player:FindFirstChildOfClass("PlayerGui")
 
--- Criar a GUI principal
+-- Criar o ScreenGui para notificações
 local notificationGui = Instance.new("ScreenGui")
 notificationGui.Name = "NotificationSystem"
 notificationGui.Parent = playerGui
 
--- Container das notificações
+-- Container para as notificações
 local notificationContainer = Instance.new("Frame")
 notificationContainer.Name = "NotificationContainer"
-notificationContainer.Size = UDim2.new(1, 0, 0, 60) -- Ocupa a largura da tela
-notificationContainer.Position = UDim2.new(0, 0, 1, -70) -- Sempre na parte de baixo
+notificationContainer.Size = UDim2.new(1, 0, 0, 60) -- Largura total da tela
+notificationContainer.Position = UDim2.new(0, 0, 0, 10) -- Posição no topo
 notificationContainer.BackgroundTransparency = 1
 notificationContainer.Parent = notificationGui
 
--- Função para adicionar uma notificação
-local function AddNotify(options)
-    local text = options.Text or ""
-    local duration = options.Duration or 5
-    local image = options.Image or ""
-    local colorText = options.ColorText or Color3.fromRGB(255, 255, 255)
-    local background = options.Background or Color3.fromRGB(30, 30, 30)
-    local closeNotify = options.CloseNotify or true
+-- Função para criar a notificação
+local SomeoneLib = {}
 
-    -- Criar a notificação
+function SomeoneLib:MakeNotify(options)
+    local text = options.Text or "Conquista!"
+    local duration = options.Duration or 5
+    local colorText = options.CorText or Color3.fromRGB(255, 255, 255)
+    local colorBackground = options.CorFundo or Color3.fromRGB(0, 0, 0)
+    local sizeY = options.SizeY or 60
+    local sizeX = options.SizeX or 400
+
+    -- Criar a notificação com bordas arredondadas
     local notification = Instance.new("Frame")
-    notification.Size = UDim2.new(0, 300, 0, 50)
-    notification.Position = UDim2.new(1, 0, 1, -70) -- Começa fora da tela (direita)
-    notification.BackgroundColor3 = background
+    notification.Size = UDim2.new(0, sizeX, 0, sizeY)
+    notification.Position = UDim2.new(0, 0, 0, -70) -- Começa fora da tela
+    notification.BackgroundColor3 = colorBackground
     notification.BorderSizePixel = 0
+    notification.BorderRadius = UDim.new(0, 10) -- Bordas arredondadas
     notification.Parent = notificationContainer
 
-    -- Criar a imagem da notificação (se houver)
-    if image ~= "" then
-        local icon = Instance.new("ImageLabel")
-        icon.Size = UDim2.new(0, 40, 0, 40)
-        icon.Position = UDim2.new(0, 10, 0.5, -20)
-        icon.Image = image
-        icon.BackgroundTransparency = 1
-        icon.Parent = notification
-    end
-
-    -- Criar o texto da notificação
+    -- Texto da notificação
     local message = Instance.new("TextLabel")
-    message.Size = UDim2.new(1, -60, 1, -10)
-    message.Position = UDim2.new(0, 50, 0, 5)
+    message.Size = UDim2.new(1, -20, 1, 0)
+    message.Position = UDim2.new(0, 10, 0, 0)
     message.BackgroundTransparency = 1
     message.Text = text
     message.TextColor3 = colorText
-    message.TextScaled = true
+    message.TextSize = 20
+    message.TextStrokeTransparency = 0.8
+    message.TextStrokeColor3 = Color3.fromRGB(0, 0, 0) -- Sombra no texto
+    message.TextWrapped = true
     message.Parent = notification
 
-    -- Criar botão de fechar se ativado
-    if closeNotify then
-        local closeButton = Instance.new("TextButton")
-        closeButton.Size = UDim2.new(0, 20, 0, 20)
-        closeButton.Position = UDim2.new(1, -25, 0, 5)
-        closeButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-        closeButton.Text = "X"
-        closeButton.TextScaled = true
-        closeButton.Parent = notification
-        closeButton.MouseButton1Click:Connect(function()
-            notification:Destroy()
-        end)
-    end
-
-    -- Animação para aparecer (movendo da direita para a esquerda)
-    local appearTween = TweenService:Create(notification, TweenInfo.new(0.5), {Position = UDim2.new(1, -310, 1, -70)})
+    -- Animação para aparecer (subindo da parte inferior)
+    local appearTween = TweenService:Create(notification, TweenInfo.new(0.5), {Position = UDim2.new(0, 0, 0, 10)})
     appearTween:Play()
 
     -- Duração da notificação antes de desaparecer
     task.delay(duration, function()
-        -- Animação para desaparecer (indo para a direita fora da tela)
-        local disappearTween = TweenService:Create(notification, TweenInfo.new(0.5), {Position = UDim2.new(1, 310, 1, -70)})
+        -- Animação para desaparecer (descendo para fora da tela)
+        local disappearTween = TweenService:Create(notification, TweenInfo.new(0.5), {Position = UDim2.new(0, 0, 0, -70)})
         disappearTween:Play()
         disappearTween.Completed:Connect(function()
             notification:Destroy()
@@ -1797,10 +1779,15 @@ local function AddNotify(options)
     end)
 end
 
--- Exportar a função para ser usada em outros scripts (se necessário)
-return {
-    AddNotify = AddNotify
-}
+-- Exemplo de como chamar a notificação:
+--local qualquernome = SomeoneLib:MakeNotify({
+  --  Text = "Você completou a missão!",
+ ----   Duration = 5,
+  --  CorText = Color3.fromRGB(255, 255, 255), -- Branco para o texto
+ --   CorFundo = Color3.fromRGB(0, 0, 0), -- Preto para o fundo
+  --  SizeY = 60, -- Altura da notificação
+  --  SizeX = 400 -- Largura da notificação
+--})
 function Window:Dialog(Configs)
 		if MainFrame:FindFirstChild("Dialog") then return end
 		if Minimized then
