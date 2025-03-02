@@ -1725,29 +1725,29 @@ notificationGui.Parent = playerGui
 -- Container das notificações
 local notificationContainer = Instance.new("Frame")
 notificationContainer.Name = "NotificationContainer"
-notificationContainer.Size = UDim2.new(0, 300, 1, -20)
-notificationContainer.Position = UDim2.new(1, -310, 0, 10)
+notificationContainer.Size = UDim2.new(1, 0, 0, 60) -- Ocupa a largura da tela
+notificationContainer.Position = UDim2.new(0, 0, 1, -70) -- Sempre na parte de baixo
 notificationContainer.BackgroundTransparency = 1
 notificationContainer.Parent = notificationGui
 
--- Criar o sistema de notificações (redzlib)
+-- Criar o sistema de notificações
 local redzlib = {}
 
 function redzlib:AddNotify(options)
     local text = options.Text or ""
-    local duration = options.Duration or 10 -- Corrigido de Daration para Duration
+    local duration = options.Duration or 5
     local image = options.Image or ""
-    local colorText = options.ColorText or Color3.fromRGB(0, 0, 0)
-    local background = options.Background or Color3.fromRGB(255, 255, 255)
-    local move = options.Move or "BaixoParaCima"
+    local colorText = options.ColorText or Color3.fromRGB(255, 255, 255)
+    local background = options.Background or Color3.fromRGB(30, 30, 30)
     local closeNotify = options.CloseNotify or true
 
     -- Criar a notificação
     local notification = Instance.new("Frame")
-    notification.Size = UDim2.new(0, 300, 0, 60)
+    notification.Size = UDim2.new(0, 300, 0, 50)
+    notification.Position = UDim2.new(1, 310, 1, -70) -- Começa fora da tela (direita)
     notification.BackgroundColor3 = background
     notification.BorderSizePixel = 0
-    notification.Parent = notificationGui
+    notification.Parent = notificationContainer
 
     -- Criar a imagem da notificação (se houver)
     if image ~= "" then
@@ -1783,43 +1783,23 @@ function redzlib:AddNotify(options)
         end)
     end
 
-    -- Definir animação com base na opção "Move"
-    local startPosition, endPosition
-
-    if move == "CimaParaBaixo" then
-        startPosition = UDim2.new(0.5, -150, 0, -60)  -- Começa fora da tela em cima
-        endPosition = UDim2.new(0.5, -150, 0, 10)    -- Move para baixo
-    elseif move == "BaixoParaCima" then
-        startPosition = UDim2.new(0.5, -150, 1, 10)  -- Começa fora da tela embaixo
-        endPosition = UDim2.new(0.5, -150, 1, -70)  -- Move para cima
-    elseif move == "DireitaParaEsquerda" then
-        startPosition = UDim2.new(1, 310, 0.5, -30) -- Começa na direita
-        endPosition = UDim2.new(1, -310, 0.5, -30) -- Move para esquerda
-    elseif move == "EsquerdaParaDireita" then
-        startPosition = UDim2.new(-1, -310, 0.5, -30) -- Começa na esquerda
-        endPosition = UDim2.new(0, 10, 0.5, -30) -- Move para direita
-    else
-        startPosition = UDim2.new(0.5, -150, 0, -60) -- Padrão (CimaParaBaixo)
-        endPosition = UDim2.new(0.5, -150, 0, 10)
-    end
-
-    notification.Position = startPosition
-    local appearTween = TweenService:Create(notification, TweenInfo.new(0.5), {Position = endPosition})
+    -- Animação para aparecer (movendo da direita para a esquerda)
+    local appearTween = TweenService:Create(notification, TweenInfo.new(0.5), {Position = UDim2.new(1, -310, 1, -70)})
     appearTween:Play()
 
-    -- Duração da notificação
-    task.wait(duration)
-
-    -- Animação para desaparecer
-    local disappearTween = TweenService:Create(notification, TweenInfo.new(0.5), {BackgroundTransparency = 1, Position = startPosition})
-    disappearTween:Play()
-    disappearTween.Completed:Connect(function()
-        notification:Destroy()
+    -- Duração da notificação antes de desaparecer
+    task.delay(duration, function()
+        -- Animação para desaparecer (continuando para a esquerda)
+        local disappearTween = TweenService:Create(notification, TweenInfo.new(0.5), {Position = UDim2.new(-1, -310, 1, -70)})
+        disappearTween:Play()
+        disappearTween.Completed:Connect(function()
+            notification:Destroy()
+        end)
     end)
 end
 
 --return redzlib
-	function Window:Dialog(Configs)
+function Window:Dialog(Configs)
 		if MainFrame:FindFirstChild("Dialog") then return end
 		if Minimized then
 			Window:MinimizeBtn()
