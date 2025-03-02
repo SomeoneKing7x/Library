@@ -1711,6 +1711,114 @@ function redzlib:MakeWindow(Configs)
 			Title.Text = Val1
 		end
 	end
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local playerGui = player:FindFirstChildOfClass("PlayerGui")
+
+-- Criar a GUI principal
+local notificationGui = Instance.new("ScreenGui")
+notificationGui.Name = "NotificationSystem"
+notificationGui.Parent = playerGui
+
+-- Container das notificações
+local notificationContainer = Instance.new("Frame")
+notificationContainer.Name = "NotificationContainer"
+notificationContainer.Size = UDim2.new(0, 300, 1, -20)
+notificationContainer.Position = UDim2.new(1, -310, 0, 10)
+notificationContainer.BackgroundTransparency = 1
+notificationContainer.Parent = notificationGui
+
+-- Criar o sistema de notificações (redzlib)
+local redzlib = {}
+
+function redzlib:AddNotify(options)
+    local text = options.Text or ""
+    local duration = options.Duration or 10 -- Corrigido de Daration para Duration
+    local image = options.Image or ""
+    local colorText = options.ColorText or Color3.fromRGB(0, 0, 0)
+    local background = options.Background or Color3.fromRGB(255, 255, 255)
+    local move = options.Move or "BaixoParaCima"
+    local closeNotify = options.CloseNotify or true
+
+    -- Criar a notificação
+    local notification = Instance.new("Frame")
+    notification.Size = UDim2.new(0, 300, 0, 60)
+    notification.BackgroundColor3 = background
+    notification.BorderSizePixel = 0
+    notification.Parent = notificationGui
+
+    -- Criar a imagem da notificação (se houver)
+    if image ~= "" then
+        local icon = Instance.new("ImageLabel")
+        icon.Size = UDim2.new(0, 40, 0, 40)
+        icon.Position = UDim2.new(0, 10, 0.5, -20)
+        icon.Image = image
+        icon.BackgroundTransparency = 1
+        icon.Parent = notification
+    end
+
+    -- Criar o texto da notificação
+    local message = Instance.new("TextLabel")
+    message.Size = UDim2.new(1, -60, 1, -10)
+    message.Position = UDim2.new(0, 50, 0, 5)
+    message.BackgroundTransparency = 1
+    message.Text = text
+    message.TextColor3 = colorText
+    message.TextScaled = true
+    message.Parent = notification
+
+    -- Criar botão de fechar se ativado
+    if closeNotify then
+        local closeButton = Instance.new("TextButton")
+        closeButton.Size = UDim2.new(0, 20, 0, 20)
+        closeButton.Position = UDim2.new(1, -25, 0, 5)
+        closeButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+        closeButton.Text = "X"
+        closeButton.TextScaled = true
+        closeButton.Parent = notification
+        closeButton.MouseButton1Click:Connect(function()
+            notification:Destroy()
+        end)
+    end
+
+    -- Definir animação com base na opção "Move"
+    local startPosition, endPosition
+
+    if move == "CimaParaBaixo" then
+        startPosition = UDim2.new(0.5, -150, 0, -60)  -- Começa fora da tela em cima
+        endPosition = UDim2.new(0.5, -150, 0, 10)    -- Move para baixo
+    elseif move == "BaixoParaCima" then
+        startPosition = UDim2.new(0.5, -150, 1, 10)  -- Começa fora da tela embaixo
+        endPosition = UDim2.new(0.5, -150, 1, -70)  -- Move para cima
+    elseif move == "DireitaParaEsquerda" then
+        startPosition = UDim2.new(1, 310, 0.5, -30) -- Começa na direita
+        endPosition = UDim2.new(1, -310, 0.5, -30) -- Move para esquerda
+    elseif move == "EsquerdaParaDireita" then
+        startPosition = UDim2.new(-1, -310, 0.5, -30) -- Começa na esquerda
+        endPosition = UDim2.new(0, 10, 0.5, -30) -- Move para direita
+    else
+        startPosition = UDim2.new(0.5, -150, 0, -60) -- Padrão (CimaParaBaixo)
+        endPosition = UDim2.new(0.5, -150, 0, 10)
+    end
+
+    notification.Position = startPosition
+    local appearTween = TweenService:Create(notification, TweenInfo.new(0.5), {Position = endPosition})
+    appearTween:Play()
+
+    -- Duração da notificação
+    task.wait(duration)
+
+    -- Animação para desaparecer
+    local disappearTween = TweenService:Create(notification, TweenInfo.new(0.5), {BackgroundTransparency = 1, Position = startPosition})
+    disappearTween:Play()
+    disappearTween.Completed:Connect(function()
+        notification:Destroy()
+    end)
+end
+
+--return redzlib
 	function Window:Dialog(Configs)
 		if MainFrame:FindFirstChild("Dialog") then return end
 		if Minimized then
