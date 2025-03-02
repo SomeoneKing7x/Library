@@ -1711,7 +1711,7 @@ function redzlib:MakeWindow(Configs)
 			Title.Text = Val1
 		end
 	end
-function redzlib:AddNotify(text, duration, iconId)
+--[[function redzlib:AddNotify(text, duration, iconId)
     duration = duration or 3
     local themeColor = self.Themes[self.Save.Theme]["Color Theme"]
     local backgroundColor = self.Themes[self.Save.Theme]["Color Hub 2"]
@@ -1757,7 +1757,7 @@ function redzlib:AddNotify(text, duration, iconId)
     TweenOut.Completed:Connect(function()
         ScreenGui:Destroy()
     end)
-end
+end]]--
 function Window:Dialog(Configs)
 		if MainFrame:FindFirstChild("Dialog") then return end
 		if Minimized then
