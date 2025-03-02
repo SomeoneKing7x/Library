@@ -197,7 +197,7 @@ Dourado = {
 	Save = {
 		UISize = {580, 420},
 		TabSize = 160,
-Theme = "Ciano"
+Theme = "PretoComPrata"
 		
 	},
 	Settings = {},
