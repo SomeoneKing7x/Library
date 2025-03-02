@@ -1711,7 +1711,76 @@ function redzlib:MakeWindow(Configs)
 			Title.Text = Val1
 		end
 	end
+local TweenService = game:GetService("TweenService")
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
 
+function redzlib:AddNotify(text, duration, iconId, customTextColor, customBackgroundColor)
+    duration = duration or 3
+    local themeColor = customTextColor or self.Themes[self.Save.Theme]["Color Theme"]
+    local backgroundColor = customBackgroundColor or self.Themes[self.Save.Theme]["Color Hub 2"]
+
+    -- Criar a ScreenGui dentro do PlayerGui
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Parent = PlayerGui
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling  -- Garante que o ZIndex do chat tenha prioridade
+
+    -- Criar o Frame da notificação
+    local Frame = Instance.new("Frame")
+    Frame.Size = UDim2.new(0, 350, 0, 60) -- Tamanho da notificação
+    Frame.Position = UDim2.new(0.5, -175, 0, -100) -- Posicionar fora da tela no topo, visível após animação
+    Frame.AnchorPoint = Vector2.new(0.5, 0)
+    Frame.BackgroundColor3 = backgroundColor
+    Frame.BorderSizePixel = 0
+    Frame.ZIndex = 10  -- Notificação estará acima de outros elementos com ZIndex menor
+    Frame.Parent = ScreenGui
+
+    -- Se houver ícone, adicionar à notificação
+    if iconId then
+        local Icon = Instance.new("ImageLabel")
+        Icon.Size = UDim2.new(0, 24, 0, 24)
+        Icon.Position = UDim2.new(0, 10, 0.5, -12)
+        Icon.BackgroundTransparency = 1
+        Icon.Image = "rbxassetid://" .. tostring(iconId)
+        Icon.ZIndex = 10
+        Icon.Parent = Frame
+    end
+
+    -- Criar o texto da notificação
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Size = UDim2.new(1, iconId and -40 or -10, 1, -10)
+    TextLabel.Position = UDim2.new(iconId and 0 or 0, 40, 0, 5)
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Text = text
+    TextLabel.TextColor3 = themeColor
+    TextLabel.TextSize = 20
+    TextLabel.Font = Enum.Font.FredokaOne
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.ZIndex = 10
+    TextLabel.Parent = Frame
+
+    -- Esperar um pequeno tempo para garantir que a ScreenGui tenha sido criada antes de animar
+    task.wait(0.1)
+
+    -- Animação de entrada (movendo a notificação de fora para dentro)
+    local TweenIn = TweenService:Create(Frame, TweenInfo.new(0.5), {Position = UDim2.new(0.5, -175, 0, 30)})
+    TweenIn:Play()
+
+    -- Esperar até o final da animação
+    task.wait(0.5)
+
+    -- Esperar o tempo definido para a notificação permanecer visível
+    task.wait(duration)
+
+    -- Animação de saída (movendo a notificação para fora da tela)
+    local TweenOut = TweenService:Create(Frame, TweenInfo.new(0.5), {Position = UDim2.new(0.5, -175, 0, -100)})
+    TweenOut:Play()
+
+    -- Após a animação de saída, destruir a ScreenGui
+    TweenOut.Completed:Connect(function()
+        ScreenGui:Destroy()
+    end)
+end
 function Window:Dialog(Configs)
 		if MainFrame:FindFirstChild("Dialog") then return end
 		if Minimized then
