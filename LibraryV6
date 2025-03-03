@@ -10,6 +10,18 @@ local PlayerMouse = Player:GetMouse()
 
 local redzlib = {
 	Themes = {
+DarkerV2 = {
+	["Color Hub 1"] = ColorSequence.new({
+		ColorSequenceKeypoint.new(0.00, Color3.fromRGB(20, 20, 20)),
+		ColorSequenceKeypoint.new(0.50, Color3.fromRGB(40, 40, 40)),
+		ColorSequenceKeypoint.new(1.00, Color3.fromRGB(20, 20, 20))
+	}),
+	["Color Hub 2"] = Color3.fromRGB(35, 35, 35),
+	["Color Stroke"] = Color3.fromRGB(50, 50, 50),
+	["Color Theme"] = Color3.fromRGB(100, 110, 250),
+	["Color Text"] = Color3.fromRGB(240, 240, 240),
+	["Color Dark Text"] = Color3.fromRGB(170, 170, 170)
+},
 		Darker = {
 			["Color Hub 1"] = ColorSequence.new({
 				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(25, 25, 25)),
@@ -48,12 +60,12 @@ local redzlib = {
 		},
 		Verde = {
     ["Color Hub 1"] = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 102, 0)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 153, 0)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 102, 0))
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
     }),
-    ["Color Hub 2"] = Color3.fromRGB(0, 128, 0),
-    ["Color Stroke"] = Color3.fromRGB(0, 102, 0),
+    ["Color Hub 2"] = Color3.fromRGB(0, 0, 0),
+    ["Color Stroke"] = Color3.fromRGB(0, 152, 0),
     ["Color Theme"] = Color3.fromRGB(34, 139, 34),
     ["Color Text"] = Color3.fromRGB(255, 255, 255),
     ["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
@@ -197,7 +209,7 @@ Dourado = {
 	Save = {
 		UISize = {580, 420},
 		TabSize = 160,
-Theme = "PretoComPrata"
+Theme = "DarkerV2"
 		
 	},
 	Settings = {},
