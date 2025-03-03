@@ -68,7 +68,7 @@ DarkerV2 = {
     ["Color Stroke"] = Color3.fromRGB(0, 152, 0),
     ["Color Theme"] = Color3.fromRGB(34, 139, 34),
     ["Color Text"] = Color3.fromRGB(255, 255, 255),
-    ["Color Dark Text"] = Color3.fromRGB(180, 180, 180
+    ["Color Dark Text"] = Color3.fromRGB(180, 180, 180)
 },
 Vermelho = {
     ["Color Hub 1"] = ColorSequence.new({
