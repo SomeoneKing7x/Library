@@ -209,7 +209,7 @@ Dourado = {
 	Save = {
 		UISize = {580, 420},
 		TabSize = 160,
-Theme = "Verde"
+Theme = "DarkerV2"
 		
 	},
 	Settings = {},
