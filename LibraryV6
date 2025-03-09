@@ -1258,39 +1258,20 @@ local ScreenGui = Create("ScreenGui", CoreGui, {
 		Name = "Scale"
 	})
 })
-local function AddBackgroundImage(MainFrame, Tab)
-    -- Criar a imagem de fundo
+local function AddBackgroundImage(MainFrame)
     local backgroundImage = Instance.new("ImageLabel")
-    backgroundImage.Size = UDim2.new(1, 0, 1, 0)
+    backgroundImage.Size = UDim2.new(1, 0, 1, 0) -- Faz ocupar toda a tela da Window
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
-    backgroundImage.Image = "rbxassetid://0"
+    backgroundImage.Image = "rbxassetid://127950462202673" -- Imagem padrão inicial
     backgroundImage.BackgroundTransparency = 1
-    backgroundImage.ZIndex = 0
+    backgroundImage.ZIndex = 0 -- Mantém no fundo
     backgroundImage.Parent = MainFrame
-
-    -- Sincronizar com a posição da UI
-    MainFrame:GetPropertyChangedSignal("Position"):Connect(function()
-        backgroundImage.Position = UDim2.new(0, 0, 0, 0)
-    end)
-
-    -- Criar o TextBox para input do AssetId
-    local TextBox = More:AddTextBoxId({
-        Title = "Imagem de Fundo",
-        PlaceholderText = "Digite o AssetId...",
-        ClearText = true,
-        Callback = function(text)
-            local assetId = tonumber(text)
-            if assetId then
-                backgroundImage.Image = "rbxassetid://" .. assetId
-            end
-        end
-    })
 
     return backgroundImage
 end
 
--- Aplicar na interface principal da library
-AddBackgroundImage(MainFrame, Tab)
+-- Criando a imagem de fundo
+local background = AddBackgroundImage(MainFrame)
 local ScreenFind = CoreGui:FindFirstChild(ScreenGui.Name)
 if ScreenFind and ScreenFind ~= ScreenGui then
 	ScreenFind:Destroy()
