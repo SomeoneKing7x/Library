@@ -1592,8 +1592,8 @@ function redzlib:MakeWindow(Configs)
 	local UISizeX, UISizeY = unpack(redzlib.Save.UISize)
 	local MainFrame = InsertTheme(Create("ImageButton", ScreenGui, {
 		Size = UDim2.fromOffset(UISizeX, UISizeY),
-		Frame.Position = UDim2.new(0.5, -Frame.Size.X.Offset/2, 0.5, -Frame.Size.Y.Offset/2)
-Frame.AnchorPoint = Vector2.new(0.5, 0.5) -- Centraliza a janela
+		Position = UDim2.new(0.5, -Frame.Size.X.Offset/2, 0.5, -Frame.Size.Y.Offset/2)
+
 		BackgroundTransparency = 0.03,
 		Name = "Hub"
 	}), "Main")
@@ -1749,12 +1749,12 @@ Frame.AnchorPoint = Vector2.new(0.5, 0.5) -- Centraliza a janela
 	function Window:CloseBtn()
 		local Dialog = Window:Dialog({
 			Title = "Close",
-			Text = "You Want Close Ui?",
+			Text = "You Want Close Ui? [ Gay? ]",
 			Options = {
-				{"Confirm", function()
+				{"Confirm [ Yes ]", function()
 					ScreenGui:Destroy()
 				end},
-				{"Cancel"}
+				{"Cancel [ No ]"}
 			}
 		})
 	end
