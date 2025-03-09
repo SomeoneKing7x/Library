@@ -1258,20 +1258,7 @@ local ScreenGui = Create("ScreenGui", CoreGui, {
 		Name = "Scale"
 	})
 })
-local function AddBackgroundImage(MainFrame)
-    local backgroundImage = Instance.new("ImageLabel")
-    backgroundImage.Size = UDim2.new(1, 0, 1, 0) -- Faz ocupar toda a tela da Window
-    backgroundImage.Position = UDim2.new(0, 0, 0, 0)
-    backgroundImage.Image = "rbxassetid://127950462202673" -- Imagem padrão inicial
-    backgroundImage.BackgroundTransparency = 1
-    backgroundImage.ZIndex = 0 -- Mantém no fundo
-    backgroundImage.Parent = MainFrame
 
-    return backgroundImage
-end
-
--- Criando a imagem de fundo
-local background = AddBackgroundImage(MainFrame)
 local ScreenFind = CoreGui:FindFirstChild(ScreenGui.Name)
 if ScreenFind and ScreenFind ~= ScreenGui then
 	ScreenFind:Destroy()
@@ -1287,7 +1274,16 @@ end
 local function ConnectSave(Instance, func)
 	Instance.InputBegan:Connect(function(Input)
 		if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-			while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do task.wait()
+			while UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseBlocal ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local BackgroundImage = Instance.new("ImageLabel")
+BackgroundImage.Parent = ScreenGui
+BackgroundImage.Size = UDim2.new(1, 0, 1, 0) -- Preenche toda a tela
+BackgroundImage.Position = UDim2.new(0, 0, 0, 0)
+BackgroundImage.Image = "rbxassetid://ID_DA_IMAGEM_AQUI"
+BackgroundImage.ScaleType = Enum.ScaleType.Stretch -- Estica a imagem para preencher a tela
+BackgroundImage.BackgroundTransparency = 1 -- Remove o fundoutton1) do task.wait()
 			end
 		end
 		func()
@@ -1596,7 +1592,8 @@ function redzlib:MakeWindow(Configs)
 	local UISizeX, UISizeY = unpack(redzlib.Save.UISize)
 	local MainFrame = InsertTheme(Create("ImageButton", ScreenGui, {
 		Size = UDim2.fromOffset(UISizeX, UISizeY),
-		Position = UDim2.new(0.5, -UISizeX/2, 0.5, -UISizeY/2),
+		Frame.Position = UDim2.new(0.5, -Frame.Size.X.Offset/2, 0.5, -Frame.Size.Y.Offset/2)
+Frame.AnchorPoint = Vector2.new(0.5, 0.5) -- Centraliza a janela
 		BackgroundTransparency = 0.03,
 		Name = "Hub"
 	}), "Main")
