@@ -1258,7 +1258,13 @@ local ScreenGui = Create("ScreenGui", CoreGui, {
 		Name = "Scale"
 	})
 })
-
+local Background = Create("ImageLabel", ScreenGui, {
+	Size = UDim2.new(1, 0, 1, 0), -- Ocupa toda a tela
+	Position = UDim2.new(0, 0, 0, 0),
+	Image = "rbxassetid://127950462202673", -- Substitua pelo ID correto
+	ScaleType = Enum.ScaleType.Stretch, -- Estica a imagem para cobrir tudo
+	BackgroundTransparency = 1 -- Remove fundo sólido
+})
 local ScreenFind = CoreGui:FindFirstChild(ScreenGui.Name)
 if ScreenFind and ScreenFind ~= ScreenGui then
 	ScreenFind:Destroy()
